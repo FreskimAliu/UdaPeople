@@ -42,15 +42,15 @@ jobs:
           keys: [frontend-build]
       - run: 
           name: Install packages
-          command: npm install
+          command: |
+            cd frontend
+            npm install
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
       - run:
           name: Build Front End
-          command: |
-            cd frontend
-            npm run build
+          command: npm run build
       
 
   build-backend:
@@ -62,15 +62,15 @@ jobs:
           keys: [backend-build]
       - run:
           name: Install packages
-          command: npm install
+          command: | 
+            cd backend
+            npm install
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
       - run:
           name: Back-end build
-          command: |
-             cd backend
-             npm run build
+          command: npm run build
 
   test-frontend:
     docker:
@@ -81,15 +81,15 @@ jobs:
           keys: [frontend-test]
        - run:
           name: Install packages
-          command: npm install
+          command: | 
+            cd frontend
+            npm install
        - save_cache:
           paths: [frontend/node_modules]
           key: frontend-test
        - run:
           name: Front End Test
-          command: |
-             cd frontend
-             npm run test
+          command: npm run test
 
   test-backend:
     docker:
@@ -100,15 +100,15 @@ jobs:
           keys: [backend-test]
       - run:
           name: Install packages
-          command: npm install
+          command: |
+            cd backend
+            npm install
       - save_cache:
           paths: [backend/node_modules]
           key: backend-test   
       - run:
           name: Back End Test
-          command: |
-             cd backend
-             npm run test
+          command: npm run test
 
   scan-frontend:
     docker:
@@ -119,15 +119,15 @@ jobs:
           keys: [frontend-audit]
       - run: 
           name: Install packages
-          command: npm install
+          command: |
+            cd frontend
+            npm install
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-audit
       - run:
           name: Audit Front End
-          command: |
-            cd frontend
-            npm audit fix --audit-level=critical --force
+          command: npm audit fix --audit-level=critical --force
 
   scan-backend:
     docker:
@@ -138,15 +138,15 @@ jobs:
           keys: [backend-audit]
       - run: 
           name: Install packages
-          command: npm install
+          command: | 
+            cd backend
+            npm install
       - save_cache:
           paths: [backend/node_modules]
           key: backend-audit
       - run:
           name: Audit Back End
-          command: |
-            cd backend
-            npm audit fix --audit-level=critical --force
+          command: npm audit fix --audit-level=critical --force
 
 #   deploy-infrastructure:
 #     docker:
