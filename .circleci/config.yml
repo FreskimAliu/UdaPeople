@@ -125,7 +125,9 @@ jobs:
           key: frontend-audit
       - run:
           name: Audit Front End
-          command: npm audit --audit-level=critical 
+          command: |
+            cd frontend
+            npm audit --audit-level=critical 
 
   scan-backend:
     docker:
@@ -142,7 +144,9 @@ jobs:
           key: backend-audit
       - run:
           name: Audit Back End
-          command: npm audit --audit-level=critical 
+          command: |
+            cd backend
+            npm audit --audit-level=critical 
 
 #   deploy-infrastructure:
 #     docker:
