@@ -190,9 +190,9 @@ jobs:
               --filters "Name=tag:project,Values=udapeople" \
               --output text >> .circleci/ansible/inventory.txt
       - persist_to_workspace:
-          root: .circleci/ansible
+          root: ~/
           paths:
-            - inventory.txt
+            - project/.circleci/ansible/inventory.txt
 #       # Here's where you will add some code to rollback on failure      
 
   configure-infrastructure:
@@ -203,7 +203,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["73:a6:01:84:87:0c:86:62:12:d3:db:ba:89:54:23:d1"]
       - attach_workspace:
-          at: .circleci/ansible
+          at: ~/project
       - run:
           name: Install dependencies
           command: |
@@ -211,7 +211,8 @@ jobs:
       - run:
           name: Configure Server
           command: |
-            ansible-playbook -i  .circle/ansible/inventory.txt .circleci/ansible/configure-server.yml
+            cd .circleci/ansible
+            ansible-playbook -i  inventory.txt configure-server.yml
       # Here's where you will add some code to rollback on failure      
 
 #   run-migrations:
