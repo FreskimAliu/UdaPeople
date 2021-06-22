@@ -203,7 +203,6 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["73:a6:01:84:87:0c:86:62:12:d3:db:ba:89:54:23:d1"]
       - attach_workspace:
-          # Must be absolute path or relative path from working_directory
           at: ~/project/.circleci/ansible
       - run:
           name: Install dependencies
@@ -212,7 +211,7 @@ jobs:
       - run:
           name: Configure Server
           command: |
-            ansible-playbook -i inventory.txt configure-server.yml 
+            ansible-playbook -i inventory.txt .circleci/ansible/configure-server.yml
       # Here's where you will add some code to rollback on failure      
 
 #   run-migrations:
