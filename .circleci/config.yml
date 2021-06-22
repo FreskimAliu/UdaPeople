@@ -162,11 +162,10 @@ jobs:
 
   deploy-infrastructure:
     docker:
-      - image: alpine:latest
       - image: amazon/aws-cli
     steps:
       - checkout
-      - run: yum -y tar gzip 
+      - run: yum -y install tar gzip 
       - run:
           name: Ensure back-end infrastructure exists
           command: |
