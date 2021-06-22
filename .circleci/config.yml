@@ -182,8 +182,8 @@ jobs:
               --filters "Name=tag:project,Values=udapeople" \
               --output text)
             echo $BACKEND_URL;
-            curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID}" \
-              --request PUT --data "BACKEND_URL" https://api.memstash.io/values/${BACKEND_URL}
+            echo ${CIRCLE_WORKFLOW_ID};
+            curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID}" --request PUT --data "${BACKEND_URL}" https://api.memstash.io/values/BACKEND_URL
       - run:
           name: Ensure front-end infrastructure exist
           command: |
