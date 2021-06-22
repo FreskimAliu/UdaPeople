@@ -162,6 +162,7 @@ jobs:
 
   deploy-infrastructure:
     docker:
+      - image: alpine:latest
       - image: amazon/aws-cli
     steps:
       - checkout
