@@ -9,11 +9,6 @@
   apt:
     upgrade: yes
 
-- name: remove dependencies that are no longer required
-  become: yes
-  apt:
-    autoremove: yes
-
 - name: "install dependencies."
   become: yes
   apt:
@@ -28,8 +23,3 @@
     global: yes
     production: yes
     state: present
-
-- name: Creates directory
-  file:
-    path: ~/web
-    state: directory
