@@ -255,18 +255,18 @@ jobs:
             echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> ".env"
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> ".env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> ".env"
-            cat .env
             npm install
-            npm run migrations
+            npm run migrations > migrations.log
+            if grep -q "has been executed successfully" migrations.log; then
+              echo "Database migration was successful"
+            else
+              exit 1
+            fi
       - run:
-          name: Send migration results to memstash
+          name: Send migration results to memstashT
           command: |
-            echo "Till here"
-#       - run:
-#           name: Send migration results to memstash
-#           command: |
-#             # Your code here
-#             exit 1
+            echo "CIRCLE_WORKFLOW_ID: ${CIRCLE_WORKFLOW_ID}"
+            curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID}" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
 #      # Here's where you will add some code to rollback on failure      
 
 #   deploy-frontend:
