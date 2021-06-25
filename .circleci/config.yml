@@ -262,7 +262,7 @@ jobs:
           name: Send migration results to memstash
           command: |
             echo "CIRCLE_WORKFLOW_ID: ${CIRCLE_WORKFLOW_ID}"
-             if grep -q "has been executed successfully" migrations.log; then
+             if grep -q "has been executed successfully" backend/migrations.log; then
               echo "Database migration was successful"
               curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID}" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             else
