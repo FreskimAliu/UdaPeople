@@ -262,7 +262,7 @@ jobs:
           name: Send migration results to memstash
           command: |
             echo "CIRCLE_WORKFLOW_ID: ${CIRCLE_WORKFLOW_ID}"
-            grep -q "has been executed successfully" backend/migrations.log
+            grep -q "has been executed successfully\|No migrations are pending" backend/migrations.log
             if [ $? -eq 0 ]; then
               echo "Database migration was successful"
               curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID}" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
@@ -293,6 +293,12 @@ jobs:
           command: |
             cd frontend
             npm run build
+      - run:
+          name: Move files to S3 bucket
+          command: |
+            WEBSITE_URL=$(aws cloudformation describe-stacks --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --query 'Stacks[].Outputs[?OutputKey==`WebsiteURL`].[OutputValue]' --output text)
+            aws s3 sync ./dist $WEBSITE_URL
 #       # Here's where you will add some code to rollback on failure      
                     
 #   deploy-backend:
