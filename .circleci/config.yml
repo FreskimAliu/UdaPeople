@@ -276,7 +276,7 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - run: yum -y install tar gzip node
+      - run: yum -y install tar gzip nodejs npm
       - run:
           name: Install dependencies
           command: |
