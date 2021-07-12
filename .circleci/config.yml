@@ -276,18 +276,20 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - run: yum -y install tar gzip nodejs npm
-      - run:
+      - run: 
           name: Install dependencies
           command: |
-            cd frontend
+            yum -y install tar gzip 
+            curl -sL https://rpm.nodesource.com/setup_lts.x | bash -
+            yum -y install nodejs
+            cd frontend 
             npm install
       - run:
           name: Get backend url
           command: |
             BACKEND_IP=$(curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID}" --request GET --data "${BACKEND_URL}" https://api.memstash.io/values/BACKEND_URL)
             export API_URL="http://${BACKEND_IP}:3030"
-            echo "${API_URL}"
+            echo "${API_URL}" >> "frontend/.env"
       - run:
           name: Deploy frontend objects
           command: |
@@ -296,9 +298,7 @@ jobs:
       - run:
           name: Move files to S3 bucket
           command: |
-            WEBSITE_URL=$(aws cloudformation describe-stacks --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --query 'Stacks[].Outputs[?OutputKey==`WebsiteURL`].[OutputValue]' --output text)
-            aws s3 sync ./dist $WEBSITE_URL
+            aws s3 cp ./frontend/dist s3://udapeople-${CIRCLE_WORKFLOW_ID}/ --recursive
 #       # Here's where you will add some code to rollback on failure      
                     
 #   deploy-backend:
