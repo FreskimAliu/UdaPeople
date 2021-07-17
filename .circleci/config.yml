@@ -315,6 +315,9 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            apk add --update ansible
+            apk add nodejs
+            apk add npm
             cd backend
             npm install
       - run:
@@ -333,6 +336,14 @@ jobs:
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
             cd backend
             npm run build
+      - run:
+          name: Move files to Server
+          command: |
+            cd .circleci/ansible/roles/deploy
+            cp ./backend/dist files --recursive
+            cd files 
+            ls
+            
 #       # Here's where you will add some code to rollback on failure  
 
 #   smoke-test:
