@@ -339,8 +339,7 @@ jobs:
       - run:
           name: Move files to Server
           command: |
-            cd .circleci/ansible/roles/deploy
-            cp ./backend/dist files --recursive
+            cp ./backend/dist .circleci/ansible/roles/deploy/files --recursive
             cd files 
             ls
             
