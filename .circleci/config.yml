@@ -17,25 +17,24 @@ commands:
             # Remove CloudFormation Stacks
             aws cloudformation delete-stack --stack-name frontend-<< parameters.workflow_id >>
             aws cloudformation delete-stack --stack-name backend-<< parameters.workflow_id >>
-            exit 1
-
+            
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
-    # parameters:
-    #   # Add parameter here     
+    parameters:
+      workflow_id: 
+        type: string     
     steps:
       - run:
           name: Revert migrations
           # Add when this will run
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS = 1
+            SUCCESS=$(curl -H "Content-Type: text/plain" -H "token: << parameters.workflow_id >>" --request GET https://api.memstash.io/values/migration_<< parameters.workflow_id >>)
             if(( $SUCCESS==1 )); 
             then
-            #  cd ~/project/backend
-            #  npm install
-            #  Add revert code here. You can find this in the Getting Started section.
-              exit 1
+            cd ~/project/backend
+            npm install
+            npm run migrations:revert
             fi
             
 jobs:
@@ -277,7 +276,10 @@ jobs:
             else 
               exit 1;
             fi
-#      # Here's where you will add some code to rollback on failure      
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID}    
 
   deploy-frontend:
     docker:
@@ -310,7 +312,9 @@ jobs:
           command: |
             aws s3 cp ./frontend/dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}/ --recursive
       - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}     
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID}
                     
   deploy-backend:
     docker:
@@ -357,6 +361,8 @@ jobs:
             ansible-playbook -i  inventory.txt deploy-backend.yml
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID}
 
   smoke-test:
     docker:
@@ -384,7 +390,9 @@ jobs:
               return 1
             fi
       - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7} 
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID}
 
 #   cloudfront-update:
 #     docker:
