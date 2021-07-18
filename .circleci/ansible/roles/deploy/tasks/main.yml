@@ -3,6 +3,10 @@
   copy:
     src: backend.zip
     dest: /home/ubuntu
+    
+- name: Unzip backend files
+  shell: |
+    unzip /home/ubuntu/backend.zip
 
 - name: Install Node
   shell: |
