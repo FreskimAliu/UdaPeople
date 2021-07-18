@@ -318,6 +318,7 @@ jobs:
             apk add --update ansible
             apk add nodejs
             apk add npm
+            apk add zip
       - run:
           name: Setup environment
           command: |
@@ -336,7 +337,8 @@ jobs:
           name: Move backend files
           command: |
             mkdir .circleci/ansible/roles/deploy/files
-            cp ./backend .circleci/ansible/roles/deploy/files/backend --recursive
+            zip -r backend.zip ./backend
+            cp backend.zip .circleci/ansible/roles/deploy/files
       - run:
           name: Deploy backend
           command: |
