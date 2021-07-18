@@ -335,7 +335,7 @@ jobs:
       - run: 
           name: Move backend files
           command: |
-            cp ./backend .circleci/ansible/roles/deploy/files --recursive
+            cp ./backend .circleci/ansible/roles/deploy/files/backend --recursive
       - run:
           name: Deploy backend
           command: |
