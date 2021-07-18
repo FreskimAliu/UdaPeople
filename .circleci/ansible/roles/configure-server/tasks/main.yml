@@ -15,6 +15,13 @@
     name: ["nodejs", "npm"]
     state: latest
     update_cache: yes
+    
+- name: "install zip unzip."
+  become: yes
+  apt:
+    name: ["zip", "unzip"]
+    state: latest
+    update_cache: yes
 
 - name: "install pm2"
   become: yes
