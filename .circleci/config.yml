@@ -331,6 +331,7 @@ jobs:
             apk add nodejs
             apk add npm
             apk add zip
+            apk add curl
             pip install awscli
       - run:
           name: Setup environment
