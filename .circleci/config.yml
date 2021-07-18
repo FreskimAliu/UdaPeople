@@ -12,7 +12,7 @@ commands:
           when: on_fail
           command: |
             # Remove content from S3 bucket
-            aws s3 aws s3 rb s3://udapeople-<< parameters.workflow_id >> --force
+            aws s3 rb s3://udapeople-<< parameters.workflow_id >> --force
             
             # Remove CloudFormation Stacks
             aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.workflow_id >>
@@ -26,7 +26,7 @@ commands:
     steps:
       - run:
           name: Revert migrations
-          # Add when this will run
+          when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
             SUCCESS=$(curl -H "Content-Type: text/plain" -H "token: << parameters.workflow_id >>" --request GET https://api.memstash.io/values/migration_<< parameters.workflow_id >>)
