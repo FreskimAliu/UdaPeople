@@ -318,10 +318,8 @@ jobs:
             apk add --update ansible
             apk add nodejs
             apk add npm
-            cd backend
-            npm install
       - run:
-          name: Build backend
+          name: Setup environment
           command: |
             echo ENVIRONMENT=production > "backend/.env"
             echo TYPEORM_CONNECTION=postgres >> "backend/.env"
@@ -334,12 +332,6 @@ jobs:
             echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
-            cd backend
-            npm run build
-      - run:
-          name: Move files to Server
-          command: |
-            cp ./backend/dist .circleci/ansible/roles/deploy/files --recursive
       - run:
           name: Deploy backend
           command: |
