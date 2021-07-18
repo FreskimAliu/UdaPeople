@@ -340,9 +340,6 @@ jobs:
           name: Move files to Server
           command: |
             cp ./backend/dist .circleci/ansible/roles/deploy/files --recursive
-            cd files 
-            ls
-            
 #       # Here's where you will add some code to rollback on failure  
 
 #   smoke-test:
