@@ -358,14 +358,11 @@ jobs:
           command: |
             apk add curl
       - run:
-          name: Get backend url
+          name: Get backend url & smoke test
           command: |
             BACKEND_IP=$(curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID}" --request GET --data "${BACKEND_URL}" https://api.memstash.io/values/BACKEND_URL)
-            export API_URL="http://${BACKEND_IP}:3030/api/status"
-      - run:
-          name: Backend smoke test.
-          command: |
-            curl ${API_URL}
+            API_URL="http://${BACKEND_IP}:3030/api/status"
+            curl $API_URL
       - run:
           name: Frontend smoke test.
           command: |
