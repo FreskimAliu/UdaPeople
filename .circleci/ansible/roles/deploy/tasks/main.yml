@@ -1,17 +1,19 @@
 ---
 - name: Copy backend dist files web server
   copy:
-    src: backend
+    src: backend.zip
     dest: /home/ubuntu
 
 - name: Install Node
   shell: |
     cd /home/ubuntu/backend
     npm install
+    
 - name: Build Node
   shell: |
     cd /home/ubuntu/backend
     npm run build
+    
 - name: Start PM2
   shell: |
     cd /home/ubuntu/backend
