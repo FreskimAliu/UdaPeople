@@ -3,14 +3,20 @@ version: 2.1
 commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
-    # parameters:
-    #   # Add parameter here   
+    parameters:
+      workflow_id: 
+        type: string
     steps:
       - run:
           name: Destroy environments
           when: on_fail
           command: |
-            # Your code here
+            # Remove content from S3 bucket
+            aws s3 aws s3 rb s3://udapeople-<< parameters.workflow_id >> --force
+            
+            # Remove CloudFormation Stacks
+            aws cloudformation delete-stack --stack-name frontend-<< parameters.workflow_id >>
+            aws cloudformation delete-stack --stack-name backend-<< parameters.workflow_id >>
             exit 1
 
   revert-migrations:
@@ -203,7 +209,8 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-#       # Here's where you will add some code to rollback on failure      
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
   configure-infrastructure:
     docker:
@@ -234,7 +241,8 @@ jobs:
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
             cd .circleci/ansible
             ansible-playbook -i  inventory.txt configure-server.yml
-      # Here's where you will add some code to rollback on failure      
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}    
 
   run-migrations:
     docker:
@@ -301,7 +309,8 @@ jobs:
           name: Move files to S3 bucket
           command: |
             aws s3 cp ./frontend/dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}/ --recursive
-#       # Here's where you will add some code to rollback on failure      
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}     
                     
   deploy-backend:
     docker:
@@ -346,7 +355,8 @@ jobs:
             BACKEND_IP=`cat inventory.txt | head -2 | tail -1`
             echo "BACKEND_IP: ${BACKEND_IP}"
             ansible-playbook -i  inventory.txt deploy-backend.yml
-#       # Here's where you will add some code to rollback on failure  
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
   smoke-test:
     docker:
@@ -371,9 +381,10 @@ jobs:
             then
               return 1
             else
-              return 0
+              return 1
             fi
-#       # Here's where you will add some code to rollback on failure  
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7} 
 
 #   cloudfront-update:
 #     docker:
