@@ -1,0 +1,11 @@
+---
+- name: Copy backend dist files web server
+  become: true
+  copy:
+    src: dist
+    dest: /home/ubuntu/backend
+
+- name: Start PM2
+  shell: |
+    cd /home/ubuntu/backend
+    pm2 start npm --name backend -- start
