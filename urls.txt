@@ -1,0 +1,5 @@
+1. https://github.com/FreskimAliu/Udapeople
+2. http://udapeople-c5b2bb3.s3-website-us-west-2.amazonaws.com
+3. https://d1b86af82p7to5.cloudfront.net
+4. ec2-34-209-212-2.us-west-2.compute.amazonaws.com
+5. ec2-54-189-245-127.us-west-2.compute.amazonaws.com
