@@ -294,17 +294,13 @@ jobs:
             cd frontend 
             npm install
       - run:
-          name: Get backend url
+          name: Get backend url & deploy the front end
           command: |
             BACKEND_IP=$(curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID}" --request GET --data "${BACKEND_URL}" https://api.memstash.io/values/BACKEND_URL)
-            echo $BACKEND_IP;
             export API_URL="http://${BACKEND_IP}:3030"
-            echo $API_URL;
             echo "${API_URL}" >> "frontend/.env"
-      - run:
-          name: Deploy frontend objects
-          command: |
             cd frontend
+            npm install
             npm run build
       - run:
           name: Move files to S3 bucket
